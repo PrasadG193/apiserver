@@ -1,7 +1,5 @@
 language: go
 
-sudo: required
-
 go:
   - 1.8.x
   
@@ -15,4 +13,4 @@ before_install:
   
 script:
   - go test ./...
-  - go install ./..
+  - go install ./...
