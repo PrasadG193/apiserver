@@ -1,11 +1,10 @@
-package apiserver_test
+package main
 
 import (
 	"fmt"
 	"strings"
 	"testing"
 	"io/ioutil"
-	"github.com/PrasadG193/apiserver/handler"
 	"net/http"
 	"net/http/httptest"
 )
@@ -13,9 +12,9 @@ import (
 var loginUrl string
 
 func init() {
-	server := httptest.NewServer(handler.SetHandlers())
+	server := httptest.NewServer(SetHandlers())
 	loginUrl = fmt.Sprintf("%s/login", server.URL)
-	handler.InitRedis()
+	InitRedis()
 }
 
 func TestClientCount(t *testing.T) {

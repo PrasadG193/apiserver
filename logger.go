@@ -1,4 +1,4 @@
-package logger
+package main
 
 import (
 	"os"
@@ -9,7 +9,8 @@ import (
 var Log = logrus.New()
 
 func InitLogger() {
-	f, err := os.OpenFile("/var/log/apiserver.log", os.O_APPEND | os.O_CREATE | os.O_RDWR, 0666)
+	home := os.Getenv("HOME")
+	f, err := os.OpenFile(home+"/apiserver.log", os.O_APPEND | os.O_CREATE | os.O_RDWR, 0666)
 	if err != nil {
 		fmt.Printf("error opening file: %v", err)
 	}

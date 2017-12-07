@@ -1,4 +1,4 @@
-package handler
+package main
 
 import (
 	//"fmt"
@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/go-redis/redis"
-	"github.com/PrasadG193/apiserver/logger"
 	)
 
 type resp struct {
@@ -22,7 +21,7 @@ func InitRedis() {
 	//logger.Logger.Println(pong, err)
 	for err != nil {
 		// Wait for redis to come up
-		logger.Log.Error(err, ". Wait and retry")
+		Log.Error(err, ". Wait and retry")
 		time.Sleep(5 * time.Second)
 		_, err = redisClient.Ping().Result()
 	}
@@ -30,7 +29,7 @@ func InitRedis() {
 }
 
 func SetHandlers() *mux.Router {
-	logger.Log.Info("Set handlers")
+	Log.Info("Set handlers")
 	router := mux.NewRouter()
 	router.HandleFunc("/login", NewVisitor).Methods("GET")
 	return router
@@ -42,7 +41,7 @@ func NewVisitor(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	logger.Log.Info("Client count :", count)
+	Log.Info("Client count :", count)
 	r := resp{Count: count}
 	json.NewEncoder(w).Encode(r)
 }
