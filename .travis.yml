@@ -1,0 +1,18 @@
+language: go
+
+sudo: required
+
+go:
+  - 1.8.x
+  
+services:
+  - redis-server
+  
+before_install:
+  - go get github.com/gorilla/mux
+  - go get github.com/go-redis/redis
+  - github.com/Sirupsen/logrus
+  
+script:
+  - go test ./...
+  - go install ./..
