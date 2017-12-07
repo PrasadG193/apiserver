@@ -9,7 +9,7 @@ services:
 before_install:
   - go get github.com/gorilla/mux
   - go get github.com/go-redis/redis
-  - github.com/Sirupsen/logrus
+  - go get github.com/Sirupsen/logrus
   
 script:
   - go test ./...
