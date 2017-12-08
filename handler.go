@@ -2,6 +2,7 @@ package main
 
 import (
 	//"fmt"
+	"os"
 	"time"
 	"net/http"
 	"encoding/json"
@@ -16,7 +17,8 @@ type resp struct {
 var redisClient *redis.Client
 
 func InitRedis() {
-	redisClient = redis.NewClient(&redis.Options{Addr: "localhost:6379", DB: 0,})
+	redisHost := os.Getenv("REDIS_DB_HOST")
+	redisClient = redis.NewClient(&redis.Options{Addr: redisHost+":6379", DB: 0,})
 	_, err := redisClient.Ping().Result()
 	//logger.Logger.Println(pong, err)
 	for err != nil {
@@ -25,7 +27,6 @@ func InitRedis() {
 		time.Sleep(5 * time.Second)
 		_, err = redisClient.Ping().Result()
 	}
-	redisClient.FlushDB()
 }
 
 func SetHandlers() *mux.Router {

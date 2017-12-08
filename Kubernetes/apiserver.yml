@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+  labels:
+    app: api-service
+spec:
+  ports:
+  - port: 12345
+  selector:
+    app: api-server
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+ name: api-server
+spec:
+  replicas: 1
+  minReadySeconds: 5
+  strategy:
+    # indicate which strategy we want for rolling update
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      name: api-server
+      labels:
+        app: api-server
+    spec:
+      containers:
+        - name: api-server
+          image: pg193/test:api-server-v3
+          env:
+          - name: REDIS_DB_HOST
+            value: redis-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 12345
+      restartPolicy: Always

@@ -15,6 +15,7 @@ func init() {
 	server := httptest.NewServer(SetHandlers())
 	loginUrl = fmt.Sprintf("%s/login", server.URL)
 	InitRedis()
+	redisClient.FlushDB()
 }
 
 func TestClientCount(t *testing.T) {

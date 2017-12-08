@@ -1,0 +1,68 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp/data"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  labels:
+    app: redis
+spec:
+  ports:
+  - port: 6379
+    name: redis-port
+  selector:
+    app: redis-pv
+  clusterIP: None
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: redis-pv
+spec:
+  serviceName: "redis-service"
+  selector:
+    matchLabels:
+      app: redis-pv
+  template:
+    metadata:
+      labels:
+        app: redis-pv
+    spec:
+      containers:
+      - name: redis-server
+        image: redis
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - mountPath: "/data"
+          name: redis-pv-storage
+      volumes:
+      - name: redis-pv-storage
+        persistentVolumeClaim:
+          claimName: pv-claim
